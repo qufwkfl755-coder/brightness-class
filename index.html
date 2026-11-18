@@ -59,17 +59,20 @@
       </div>
 
       <!-- 4단계 탭 버튼 -->
-      <nav class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800">
-        <button id="tab-part1" type="button" onclick="switchPart(1)" class="flex-1 py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all bg-indigo-600 text-white shadow-lg cursor-pointer">
-          1단계: 3D 얼굴 원근법
+      <nav class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-2xl border border-slate-800 overflow-x-auto">
+        <button id="tab-part1" type="button" onclick="switchPart(1)" class="flex-1 min-w-[92px] py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all bg-indigo-600 text-white shadow-lg cursor-pointer">
+          0단계: 3D 얼굴 원근법
         </button>
-        <button id="tab-part2" type="button" onclick="switchPart(2)" class="flex-1 py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-400 hover:text-white cursor-pointer">
+        <button id="tab-part0" type="button" onclick="switchPart(0)" class="flex-1 min-w-[92px] py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-400 hover:text-white cursor-pointer">
+          🎬 1단계: 프롤로그
+        </button>
+        <button id="tab-part2" type="button" onclick="switchPart(2)" class="flex-1 min-w-[92px] py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-400 hover:text-white cursor-pointer">
           2단계: 별의 10pc 정렬
         </button>
-        <button id="tab-part3" type="button" onclick="switchPart(3)" class="flex-1 py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-400 hover:text-white cursor-pointer">
+        <button id="tab-part3" type="button" onclick="switchPart(3)" class="flex-1 min-w-[92px] py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-400 hover:text-white cursor-pointer">
           3단계: 2.5배 곱하기 계단
         </button>
-        <button id="tab-part4" type="button" onclick="switchPart(4)" class="flex-1 py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-400 hover:text-white cursor-pointer">
+        <button id="tab-part4" type="button" onclick="switchPart(4)" class="flex-1 min-w-[92px] py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-400 hover:text-white cursor-pointer">
           4단계: 실전 배치 & 퀴즈
         </button>
       </nav>
@@ -78,6 +81,69 @@
 
   <!-- 메인 콘텐츠 컨테이너 -->
   <main class="flex-1 max-w-5xl w-full mx-auto px-4 py-6">
+
+    <!-- ===================================================================== -->
+    <!-- 0부: 도입부 스토리 애니메이션 (히파르코스의 등급 탄생 → 3D 거리 발견 → 10pc 기준 확정) -->
+    <!-- ===================================================================== -->
+    <section id="section-part0" class="hidden flex flex-col gap-5">
+      <!-- 상단 장면 진행 표시줄 -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div class="flex items-center gap-2 flex-wrap">
+          <span id="intro-scene-badge" class="px-3 py-1 rounded-full text-xs font-black bg-amber-400 text-slate-950">
+            장면 1 / 5
+          </span>
+          <div class="flex items-center gap-1.5" id="intro-dots"></div>
+        </div>
+        <button type="button" onclick="switchPart(2)" class="text-xs font-bold text-slate-400 hover:text-amber-300 underline px-2 py-1 cursor-pointer">
+          프롤로그 건너뛰고 2단계 별의 10pc 정렬 바로 가기 →
+        </button>
+      </div>
+
+      <!-- 3D 스토리 애니메이션 무대 -->
+      <div class="relative w-full h-[390px] sm:h-[450px] rounded-3xl overflow-hidden border-2 border-slate-700/80 shadow-2xl bg-[#040711] select-none">
+        <div id="p0-three-container" class="w-full h-full"></div>
+        <div id="p0-overlay-ui" class="absolute inset-0 pointer-events-none z-20 overflow-hidden"></div>
+
+        <!-- 좌측 상단 시대/시점 배지 -->
+        <div class="absolute top-4 left-4 bg-slate-950/85 backdrop-blur border border-slate-700 px-3.5 py-1.5 rounded-xl text-xs font-bold text-amber-300 z-30 pointer-events-none">
+          <span id="p0-era-label">🏛️ 기원전 2세기 · 고대 천문학자 히파르코스</span>
+        </div>
+
+        <!-- 장면 5 전용: 기준 거리 선택 버튼 (1pc vs 10pc vs 100pc) -->
+        <div id="p0-dist-selector" class="hidden absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-2 bg-slate-950/90 backdrop-blur border border-slate-700 p-1.5 rounded-2xl z-30 shadow-xl">
+          <button type="button" id="p0-btn-1pc" onclick="setIntroDistanceMode('1pc')" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white cursor-pointer transition-all">
+            ❌ 1pc (너무 가까움!)
+          </button>
+          <button type="button" id="p0-btn-10pc" onclick="setIntroDistanceMode('10pc')" class="px-3.5 py-1.5 rounded-xl text-xs font-black bg-amber-400 text-slate-950 shadow cursor-pointer transition-all">
+            ✅ 10pc (황금 기준선!)
+          </button>
+          <button type="button" id="p0-btn-100pc" onclick="setIntroDistanceMode('100pc')" class="px-3 py-1.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white cursor-pointer transition-all">
+            ❌ 100pc (너무 멀다!)
+          </button>
+        </div>
+      </div>
+
+      <!-- 하단 내레이션 자막 박스 & 이전/다음 장면 컨트롤 -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div class="flex-1">
+          <h2 id="p0-story-title" class="text-lg sm:text-xl font-black text-white mb-1.5">
+            1. "제일 밝게 보이는 별이 1등(1등급), 간신히 보이는 별이 6등(6등급)!"
+          </h2>
+          <p id="p0-story-desc" class="text-sm text-slate-300 leading-relaxed">
+            옛날 과학자는 밤하늘을 올려다보며 맨눈으로 가장 밝아 보이는 별에 <strong>1등급</strong>, 눈을 찡그려야 간신히 보이는 가장 어두운 별에 <strong>6등급</strong>이라는 등수를 매겼습니다.
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2.5 w-full md:w-auto justify-end shrink-0">
+          <button id="p0-prev-btn" type="button" onclick="changeIntroScene(-1)" class="px-4 py-3 rounded-xl bg-slate-800 hover:bg-slate-700 disabled:opacity-40 text-slate-200 font-bold text-sm border border-slate-700 cursor-pointer">
+            ← 이전 장면
+          </button>
+          <button id="p0-next-btn" type="button" onclick="changeIntroScene(1)" class="px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30 cursor-pointer">
+            다음 장면 →
+          </button>
+        </div>
+      </div>
+    </section>
 
     <!-- ===================================================================== -->
     <!-- 1부: 사람 얼굴 원근법 비유 (3D 얼굴만 보기 → 불 켜고 거리 공개 → 10m 기준선 정렬) -->
@@ -138,8 +204,8 @@
             <button id="p1-btn-step3" type="button" onclick="goPart1Step(3)" class="hidden w-full sm:w-auto px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-extrabold text-sm shadow-lg shadow-amber-400/25 transition-all cursor-pointer">
               📏 한 번에 10m 기준선 자동 정렬 →
             </button>
-            <button id="p1-btn-nextpart" type="button" onclick="switchPart(2)" class="hidden w-full sm:w-auto px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30 transition-all cursor-pointer">
-              ✨ 2단계: 별의 밝기도 똑같이 비교하기 →
+            <button id="p1-btn-nextpart" type="button" onclick="switchPart(0)" class="hidden w-full sm:w-auto px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30 transition-all cursor-pointer">
+              🎬 1단계: 별의 등급 탄생 프롤로그 보기 →
             </button>
           </div>
         </div>
@@ -477,6 +543,409 @@
   </div>
 
   <script>
+    // =========================================================================
+    // 0부: 도입부 5장면 스토리 애니메이션 (Three.js 기반)
+    // =========================================================================
+    const introScenes = [
+      {
+        era: '🏛️ 장면 1 · 고대 천문학자의 밤하늘 관측',
+        title: '1. "제일 밝게 보이는 별이 1등(1등급), 제일 어두운 별이 6등(6등급)!"',
+        desc: '옛날 과학자는 밤하늘을 올려다보며 맨눈에 가장 밝아 보이는 별을 <strong>1등급</strong>, 눈을 찡그려야 간신히 보이는 가장 어두운 별을 <strong>6등급</strong>으로 정했습니다. 이때까진 모든 별이 하늘이라는 한 벽면에 붙어 있다고 생각했죠.'
+      },
+      {
+        era: '🛸 장면 2 · 시간 흐름 & 3D 우주 입체 거리 발견',
+        title: '2. 시간이 흐른 뒤, 우주 배경이 켜지고 별까지의 3D 거리를 재게 되었습니다!',
+        desc: '관측 기술이 발전하면서 별들이 같은 거리에 있는 게 아니라, <strong>어떤 별은 코앞에 있고 어떤 별은 수백 파섹(pc) 뒤쪽에 입체적으로 흩어져 있음</strong>을 알아냈습니다!'
+      },
+      {
+        era: '💡 장면 3 · 겉보기 등급 vs 절대 등급의 탄생',
+        title: '3. "어? 코앞이라 밝아 보였을 뿐이네?" — 진짜 밝기와 겉으로 본 밝기가 달랐다!',
+        desc: '거리를 알고 나니 별의 <strong>진짜 밝기(실제 광도)</strong>를 계산할 수 있게 되었습니다. 그래서 지구에서 본 밝기는 <strong>[겉보기 등급]</strong>, 모든 별을 똑같은 기준선에 세워 비교한 진짜 밝기는 <strong>[절대 등급]</strong>으로 나누어 부르기로 했습니다.'
+      },
+      {
+        era: '🔥 장면 4 · 기준 거리 후보 ①: 1파섹(1pc)에 두면?',
+        title: '4. 기준선을 1파섹(1pc)으로 잡았더니… "너무 가까워서 밝은 별이 폭발한다!"',
+        desc: '기준 거리를 <strong>1pc</strong>으로 너무 가깝게 잡으면 우리 태양조차 밤하늘 최강급(<strong>-0.2등급</strong>)으로 눈부시게 빛나고, 다른 별들은 마이너스 등급이 끝없이 쏟아져 비교하기가 너무 불편해집니다.'
+      },
+      {
+        era: '🌟 장면 5 · 황금 기준선 확정: 왜 하필 10파섹(10pc)일까?',
+        title: '5. "10pc보다 멀면 태양이 안 보이고, 10pc이 딱 적당해!" — 10pc 기준선 확정!',
+        desc: '아래 버튼으로 <strong>1pc · 10pc · 100pc</strong>을 직접 눌러보세요! <strong>100pc</strong>에선 태양이 <strong>+9.8등급</strong>으로 어두워져 맨눈(6등급 한계)으로 아예 안 보이지만, <strong>10pc(32.6광년)</strong>에선 태양이 <strong>+4.8등급</strong>으로 딱 적당히 보입니다!'
+      }
+    ];
+
+    let p0SceneIdx = 0;
+    let p0DistMode = '10pc';
+    let p0Scene, p0Camera, p0Renderer;
+    let p0EnvGroup, p0StarObjects = [];
+    let p0CamPos = new THREE.Vector3(0, 2.2, 10.5);
+    let p0TargetCamPos = new THREE.Vector3(0, 2.2, 10.5);
+    let p0LookAt = new THREE.Vector3(0, 2.0, -1.0);
+    let p0TargetLookAt = new THREE.Vector3(0, 2.0, -1.0);
+
+    function initPart0Intro() {
+      const container = document.getElementById('p0-three-container');
+      if (!container || p0Renderer) return;
+
+      p0Scene = new THREE.Scene();
+      p0Scene.background = new THREE.Color(0x040711);
+      p0Scene.fog = new THREE.Fog(0x040711, 16, 40);
+
+      const w = container.clientWidth || 800;
+      const h = container.clientHeight || 430;
+      p0Camera = new THREE.PerspectiveCamera(42, w / h, 0.1, 100);
+
+      p0Renderer = new THREE.WebGLRenderer({ antialias: true });
+      p0Renderer.setSize(w, h);
+      p0Renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.innerHTML = '';
+      container.appendChild(p0Renderer.domElement);
+
+      p0Scene.add(new THREE.AmbientLight(0xffffff, 1.0));
+
+      // 3D 우주 입체 격자 및 기준선 그룹 (장면 2부터 점등)
+      p0EnvGroup = new THREE.Group();
+      p0EnvGroup.visible = false;
+      p0Scene.add(p0EnvGroup);
+
+      const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(24, 24),
+        new THREE.MeshBasicMaterial({ color: 0x0b1224, transparent: true, opacity: 0.88 })
+      );
+      floor.rotation.x = -Math.PI / 2;
+      p0EnvGroup.add(floor);
+
+      const grid = new THREE.GridHelper(20, 20, 0x334155, 0x1e293b);
+      grid.position.y = 0.01;
+      p0EnvGroup.add(grid);
+
+      // 기준선 마커 (1pc, 10pc, 100pc)
+      const refLines = [
+        { z: 4.5, color: 0x38bdf8, width: 0.10, text: '1pc (너무 가까움)' },
+        { z: -1.5, color: 0xfbbf24, width: 0.28, text: '📏 10pc 황금 기준선 (32.6광년)' },
+        { z: -7.5, color: 0x64748b, width: 0.10, text: '100pc (너무 멀다 · 맨눈 한계 밖)' }
+      ];
+
+      refLines.forEach(rl => {
+        const mesh = new THREE.Mesh(
+          new THREE.PlaneGeometry(11.6, rl.width),
+          new THREE.MeshBasicMaterial({ color: rl.color, side: THREE.DoubleSide })
+        );
+        mesh.rotation.x = -Math.PI / 2;
+        mesh.position.set(0, 0.02, rl.z);
+        p0EnvGroup.add(mesh);
+
+        const c = document.createElement('canvas');
+        c.width = 480;
+        c.height = 56;
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = rl.z === -1.5 ? '#fbbf24' : '#1e293b';
+        ctx.beginPath();
+        ctx.roundRect(10, 6, 460, 44, 14);
+        ctx.fill();
+        ctx.fillStyle = rl.z === -1.5 ? '#090d16' : '#e2e8f0';
+        ctx.font = 'bold 20px "Noto Sans KR", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(rl.text, 240, 29);
+
+        const sign = new THREE.Mesh(
+          new THREE.PlaneGeometry(4.2, 0.48),
+          new THREE.MeshBasicMaterial({ map: new THREE.CanvasTexture(c), transparent: true })
+        );
+        sign.rotation.x = -Math.PI / 2;
+        sign.position.set(0, 0.03, rl.z + 0.42);
+        p0EnvGroup.add(sign);
+      });
+
+      // 하단 밤하늘을 올려다보는 과학자(천문학자) 실루엣 아이콘
+      const astronomerGroup = new THREE.Group();
+      const bodyMesh = new THREE.Mesh(
+        new THREE.ConeGeometry(0.45, 1.3, 18),
+        new THREE.MeshBasicMaterial({ color: 0x312e81 })
+      );
+      bodyMesh.position.set(0, 0.65, 7.6);
+      astronomerGroup.add(bodyMesh);
+
+      const headMesh = new THREE.Mesh(
+        new THREE.SphereGeometry(0.24, 18, 18),
+        new THREE.MeshBasicMaterial({ color: 0xfde2c4 })
+      );
+      headMesh.position.set(0, 1.45, 7.6);
+      astronomerGroup.add(headMesh);
+      p0Scene.add(astronomerGroup);
+
+      // 도입부 출연 별 4개 (태양이 지구 바로 앞에 가장 가깝고, 시리우스는 그 뒤쪽 2.6pc에 위치)
+      const introStarSpecs = [
+        { id: 'sun', name: '우리 태양 ☀️', color: 0xfacc15, rgba: 'rgba(250, 204, 21, 1.0)', x: -3.2, zFlat: -1.5, z3D: 6.2, appLvl: 1.75, absLvl: 0.85, tag1: '태양 (지구 바로 앞 · -26.7등급)', tag3: '10pc 기준 = +4.8등급 (딱 보임!)' },
+        { id: 's1', name: '1등별 (시리우스)', color: 0x38bdf8, rgba: 'rgba(56, 189, 248, 0.98)', x: -1.0, zFlat: -1.5, z3D: 3.2, appLvl: 1.45, absLvl: 0.45, tag1: '1등급! (밤하늘 1등)', tag3: '겉보기 1등 → 실제는 평범!' },
+        { id: 'giant', name: '초거성 (데네브)', color: 0xf472b6, rgba: 'rgba(244, 114, 182, 0.95)', x: 1.3, zFlat: -1.5, z3D: -7.5, appLvl: 0.55, absLvl: 1.75, tag1: '3등급 (보통 별)', tag3: '겉보기 3등 → 실제는 초거성!' },
+        { id: 's6', name: '6등별 (희미한 별)', color: 0x94a3b8, rgba: 'rgba(148, 163, 184, 0.85)', x: 3.3, zFlat: -1.5, z3D: -5.2, appLvl: 0.25, absLvl: 0.32, tag1: '6등급 (간신히 보임)', tag3: '맨눈 관측 한계 = 6등급' }
+      ];
+
+      const overlay = document.getElementById('p0-overlay-ui');
+      overlay.innerHTML = '';
+
+      introStarSpecs.forEach(sp => {
+        const root = new THREE.Group();
+        const core = new THREE.Mesh(
+          new THREE.SphereGeometry(0.32, 24, 24),
+          new THREE.MeshBasicMaterial({ color: 0xffffff })
+        );
+        core.position.set(0, 2.2, 0);
+        root.add(core);
+
+        const sprite = new THREE.Sprite(
+          new THREE.SpriteMaterial({
+            map: createStarGlowTexture(sp.rgba),
+            transparent: true,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+          })
+        );
+        sprite.position.set(0, 2.2, 0);
+        root.add(sprite);
+
+        const stem = new THREE.Mesh(
+          new THREE.CylinderGeometry(0.02, 0.02, 2.2, 8),
+          new THREE.MeshBasicMaterial({ color: sp.color, transparent: true, opacity: 0.55 })
+        );
+        stem.position.set(0, 1.1, 0);
+        stem.visible = false;
+        root.add(stem);
+
+        const curPos = new THREE.Vector3(sp.x, 0, sp.zFlat);
+        const tgtPos = new THREE.Vector3(sp.x, 0, sp.zFlat);
+        root.position.copy(curPos);
+        p0Scene.add(root);
+
+        const labelEl = document.createElement('div');
+        labelEl.className = 'absolute -translate-x-1/2 -translate-y-full px-2.5 py-1 rounded-full text-xs font-extrabold bg-slate-950/90 text-white border border-slate-700 shadow whitespace-nowrap transition-colors';
+        overlay.appendChild(labelEl);
+
+        p0StarObjects.push({
+          ...sp,
+          root,
+          core,
+          sprite,
+          stem,
+          curPos,
+          tgtPos,
+          curLvl: sp.appLvl,
+          tgtLvl: sp.appLvl,
+          labelEl
+        });
+      });
+
+      window.addEventListener('resize', () => {
+        if (!p0Renderer || !container) return;
+        const nw = container.clientWidth || 800;
+        const nh = container.clientHeight || 430;
+        p0Camera.aspect = nw / nh;
+        p0Camera.updateProjectionMatrix();
+        p0Renderer.setSize(nw, nh);
+      });
+
+      applyIntroSceneState();
+      animatePart0();
+    }
+
+    function setIntroDistanceMode(mode) {
+      p0DistMode = mode;
+      playSnapSound();
+      applyIntroSceneState();
+    }
+
+    function applyIntroSceneState() {
+      const sceneData = introScenes[p0SceneIdx];
+      document.getElementById('intro-scene-badge').textContent = `장면 ${p0SceneIdx + 1} / ${introScenes.length}`;
+      document.getElementById('p0-era-label').textContent = sceneData.era;
+      document.getElementById('p0-story-title').textContent = sceneData.title;
+      document.getElementById('p0-story-desc').innerHTML = sceneData.desc;
+
+      const dotsEl = document.getElementById('intro-dots');
+      dotsEl.innerHTML = introScenes.map((_, i) => `
+        <button type="button" onclick="jumpIntroScene(${i})" class="w-2.5 h-2.5 rounded-full transition-all cursor-pointer ${i === p0SceneIdx ? 'bg-amber-400 w-6' : i < p0SceneIdx ? 'bg-emerald-400' : 'bg-slate-700'}"></button>
+      `).join('');
+
+      document.getElementById('p0-prev-btn').disabled = p0SceneIdx === 0;
+      const nextBtn = document.getElementById('p0-next-btn');
+      if (p0SceneIdx === introScenes.length - 1) {
+        nextBtn.textContent = '✨ 2단계: 별의 10pc 정렬 실험 시작 →';
+        nextBtn.className = 'px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-sm shadow-lg shadow-amber-400/25 cursor-pointer';
+      } else {
+        nextBtn.textContent = '다음 장면 →';
+        nextBtn.className = 'px-5 py-3 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-extrabold text-sm shadow-lg shadow-indigo-500/30 cursor-pointer';
+      }
+
+      const distSelector = document.getElementById('p0-dist-selector');
+      if (p0SceneIdx === 4) {
+        distSelector.classList.remove('hidden');
+        ['1pc', '10pc', '100pc'].forEach(m => {
+          const btn = document.getElementById(`p0-btn-${m}`);
+          if (!btn) return;
+          if (m === p0DistMode) {
+            btn.className = 'px-3.5 py-1.5 rounded-xl text-xs font-black bg-amber-400 text-slate-950 shadow cursor-pointer transition-all';
+          } else {
+            btn.className = 'px-3 py-1.5 rounded-xl text-xs font-bold text-slate-300 hover:text-white cursor-pointer transition-all';
+          }
+        });
+      } else {
+        distSelector.classList.add('hidden');
+      }
+
+      if (!p0EnvGroup) return;
+
+      if (p0SceneIdx === 0) {
+        // 장면 1: 평면 밤하늘, 1등~6등 등급 부여
+        p0Scene.background = new THREE.Color(0x040711);
+        p0Scene.fog.color.setHex(0x040711);
+        p0EnvGroup.visible = false;
+        p0TargetCamPos.set(0, 2.2, 10.5);
+        p0TargetLookAt.set(0, 2.1, -1.5);
+
+        p0StarObjects.forEach(st => {
+          st.stem.visible = false;
+          st.tgtPos.set(st.x, 0, st.zFlat);
+          st.tgtLvl = st.appLvl;
+        });
+      } else if (p0SceneIdx === 1) {
+        // 장면 2: 3D 우주 배경 점등 & 입체 거리 드러남
+        p0Scene.background = new THREE.Color(0x0d162c);
+        p0Scene.fog.color.setHex(0x0d162c);
+        p0EnvGroup.visible = true;
+        p0TargetCamPos.set(5.4, 5.2, 11.2);
+        p0TargetLookAt.set(0, 1.3, -1.2);
+
+        p0StarObjects.forEach(st => {
+          st.stem.visible = true;
+          st.tgtPos.set(st.x, 0, st.z3D);
+          st.tgtLvl = st.appLvl;
+        });
+      } else if (p0SceneIdx === 2) {
+        // 장면 3: 실제 광도(절대 등급)와 겉보기 등급 차이 비교
+        p0Scene.background = new THREE.Color(0x0d162c);
+        p0Scene.fog.color.setHex(0x0d162c);
+        p0EnvGroup.visible = true;
+        p0TargetCamPos.set(3.8, 4.6, 11.0);
+        p0TargetLookAt.set(0, 1.5, -1.5);
+
+        p0StarObjects.forEach(st => {
+          st.stem.visible = true;
+          st.tgtPos.set(st.x, 0, -1.5);
+          st.tgtLvl = st.absLvl;
+        });
+      } else if (p0SceneIdx === 3) {
+        // 장면 4: 1pc 기준일 때 너무 밝아서 폭주하는 모습
+        p0Scene.background = new THREE.Color(0x131c38);
+        p0Scene.fog.color.setHex(0x131c38);
+        p0EnvGroup.visible = true;
+        p0TargetCamPos.set(0, 3.8, 11.5);
+        p0TargetLookAt.set(0, 1.8, 1.5);
+
+        p0StarObjects.forEach(st => {
+          st.stem.visible = true;
+          st.tgtPos.set(st.x, 0, 4.5);
+          st.tgtLvl = Math.min(2.3, st.absLvl * 1.85);
+        });
+      } else if (p0SceneIdx === 4) {
+        // 장면 5: 1pc vs 10pc vs 100pc 비교
+        p0Scene.background = new THREE.Color(0x0d162c);
+        p0Scene.fog.color.setHex(0x0d162c);
+        p0EnvGroup.visible = true;
+        p0TargetCamPos.set(2.8, 4.3, 11.2);
+        p0TargetLookAt.set(0, 1.6, -1.5);
+
+        const zMap = { '1pc': 4.5, '10pc': -1.5, '100pc': -7.5 };
+        const multMap = { '1pc': 1.85, '10pc': 1.0, '100pc': 0.28 };
+        p0StarObjects.forEach(st => {
+          st.stem.visible = true;
+          st.tgtPos.set(st.x, 0, zMap[p0DistMode]);
+          st.tgtLvl = Math.max(0.14, Math.min(2.3, st.absLvl * multMap[p0DistMode]));
+        });
+      }
+    }
+
+    function changeIntroScene(delta) {
+      if (p0SceneIdx === introScenes.length - 1 && delta > 0) {
+        switchPart(2);
+        return;
+      }
+      p0SceneIdx = Math.max(0, Math.min(introScenes.length - 1, p0SceneIdx + delta));
+      playSnapSound();
+      applyIntroSceneState();
+    }
+
+    function jumpIntroScene(idx) {
+      p0SceneIdx = idx;
+      playSnapSound();
+      applyIntroSceneState();
+    }
+
+    function animatePart0() {
+      requestAnimationFrame(animatePart0);
+      if (!p0Renderer || !p0Scene || !p0Camera) return;
+
+      p0CamPos.lerp(p0TargetCamPos, 0.08);
+      p0LookAt.lerp(p0TargetLookAt, 0.08);
+      p0Camera.position.copy(p0CamPos);
+      p0Camera.lookAt(p0LookAt);
+
+      const container = document.getElementById('p0-three-container');
+      const w = container ? container.clientWidth : 800;
+      const h = container ? container.clientHeight : 430;
+      const pulse = 1 + Math.sin(performance.now() * 0.004) * 0.06;
+
+      p0StarObjects.forEach(st => {
+        st.curPos.lerp(st.tgtPos, 0.1);
+        st.root.position.copy(st.curPos);
+
+        st.curLvl += (st.tgtLvl - st.curLvl) * 0.12;
+        st.core.scale.setScalar(Math.max(0.18, st.curLvl * 0.88));
+        const sDim = Math.max(0.55, st.curLvl * 3.1 * pulse);
+        st.sprite.scale.set(sDim, sDim, 1);
+
+        const worldPos = new THREE.Vector3(0, 2.2 + Math.max(0.25, st.curLvl * 0.55) + 0.22, 0);
+        st.root.localToWorld(worldPos);
+        worldPos.project(p0Camera);
+
+        const sx = (worldPos.x * 0.5 + 0.5) * w;
+        const sy = (-worldPos.y * 0.5 + 0.5) * h;
+        st.labelEl.style.left = `${sx}px`;
+        st.labelEl.style.top = `${sy}px`;
+
+        let labelText = st.tag1;
+        if (p0SceneIdx === 1) {
+          const dMap = { sun: '0.000005pc (지구 코앞!)', s1: '2.6pc (가까운 별)', giant: '802pc (아주 멈)', s6: '120pc (멈)' };
+          labelText = `${st.name} · ${dMap[st.id]}`;
+        } else if (p0SceneIdx === 2) {
+          labelText = st.tag3;
+        } else if (p0SceneIdx === 3) {
+          labelText = st.id === 'sun' ? '태양 (1pc = -0.2등급 · 너무 밝음!)' : `${st.name} · 눈부심 폭발!`;
+        } else if (p0SceneIdx === 4) {
+          if (st.id === 'sun') {
+            const sunText = {
+              '1pc': '태양 @ 1pc = -0.2등급 (너무 밝음!)',
+              '10pc': '⭐ 태양 @ 10pc = +4.8등급 (맨눈 딱 보임!)',
+              '100pc': '태양 @ 100pc = +9.8등급 (안 보임!)'
+            };
+            labelText = sunText[p0DistMode];
+          } else {
+            labelText = `${st.name} @ ${p0DistMode}`;
+          }
+        }
+        st.labelEl.textContent = labelText;
+
+        if (st.id === 'sun' && p0SceneIdx === 4 && p0DistMode === '10pc') {
+          st.labelEl.className = 'absolute -translate-x-1/2 -translate-y-full px-3 py-1 rounded-full text-xs font-black bg-amber-400 text-slate-950 ring-2 ring-white shadow-lg whitespace-nowrap';
+        } else {
+          st.labelEl.className = 'absolute -translate-x-1/2 -translate-y-full px-2.5 py-1 rounded-full text-xs font-extrabold bg-slate-950/90 text-white border border-slate-700 shadow whitespace-nowrap';
+        }
+      });
+
+      p0Renderer.render(p0Scene, p0Camera);
+    }
+
     // =========================================================================
     // Tone.js 기반 우주 실험실 효과음 엔진 (음소거 토글 포함)
     // =========================================================================
@@ -2226,7 +2695,7 @@
     // 상단 탭 전환 및 초기 실행
     // =========================================================================
     function switchPart(partNum) {
-      [1, 2, 3, 4].forEach(num => {
+      [0, 1, 2, 3, 4].forEach(num => {
         const sec = document.getElementById(`section-part${num}`);
         const tab = document.getElementById(`tab-part${num}`);
         if (sec) {
@@ -2235,14 +2704,21 @@
         }
         if (tab) {
           if (num === partNum) {
-            tab.className = 'flex-1 py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all bg-indigo-600 text-white shadow-lg cursor-pointer';
+            tab.className = 'flex-1 min-w-[92px] py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all bg-indigo-600 text-white shadow-lg cursor-pointer';
           } else {
-            tab.className = 'flex-1 py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-400 hover:text-white cursor-pointer';
+            tab.className = 'flex-1 min-w-[92px] py-2.5 px-2 sm:px-3 rounded-xl font-bold text-xs sm:text-sm transition-all text-slate-400 hover:text-white cursor-pointer';
           }
         }
       });
 
-      if (partNum === 1 && p1Renderer) {
+      if (partNum === 0 && p0Renderer) {
+        const container = document.getElementById('p0-three-container');
+        if (container) {
+          p0Camera.aspect = (container.clientWidth || 800) / (container.clientHeight || 430);
+          p0Camera.updateProjectionMatrix();
+          p0Renderer.setSize(container.clientWidth || 800, container.clientHeight || 430);
+        }
+      } else if (partNum === 1 && p1Renderer) {
         const container = document.getElementById('p1-three-container');
         if (container) {
           p1Camera.aspect = (container.clientWidth || 800) / (container.clientHeight || 440);
@@ -2260,6 +2736,7 @@
     }
 
     window.addEventListener('load', () => {
+      initPart0Intro();
       initPart1Three();
       initPart2Stars();
       renderStaircase();
@@ -2267,6 +2744,7 @@
       initMissionDrag();
       generateMissionStar();
       renderQuiz();
+      switchPart(1);
     });
   </script>
 </body>
